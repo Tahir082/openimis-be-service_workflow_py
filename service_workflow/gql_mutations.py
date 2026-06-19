@@ -117,3 +117,23 @@ class UpdatePublicServiceMutation(BaseHistoryModelCreateMutationMixin, BaseMutat
             data=data
         )
         return result
+
+class DeletePublicServiceMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
+    _mutation_module = mutation_module
+    _mutation_class = "DeletePublicServiceMutation"
+
+    class Input(PublicServiceInputType):
+        pass
+
+    @classmethod
+    def _mutate(cls, user, **data):
+        failure_message = "service_workflow.mutation.failed_to_delete_public_service"
+        service_instance = PublicServiceServices(user)
+        result = auth_permission_validation(
+            failure_message=failure_message,
+            call_type='delete',
+            service_instance=service_instance,
+            user=user,
+            data=data
+        )
+        return result

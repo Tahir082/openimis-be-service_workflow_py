@@ -27,3 +27,7 @@ class PublicServiceServices(BaseService):
     def update(self, obj_data):
         obj_data["user_updated"] = self.user
         return super().update(obj_data)
+
+    def delete(self, obj_data):
+        obj_data["user_updated"] = self.user
+        PublicService.objects.get(id=obj_data["id"]).delete(username=self.user.username)

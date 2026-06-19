@@ -42,4 +42,5 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     create_public_service = CreatePublicServiceMutation.Field()
     update_public_service = UpdatePublicServiceMutation.Field()
+    delete_public_service = DeletePublicServiceMutation.Field()
 
