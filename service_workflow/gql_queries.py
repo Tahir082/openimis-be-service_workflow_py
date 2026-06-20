@@ -13,35 +13,12 @@ class PublicServiceGQLType(DjangoObjectType):
     class Meta:
         model = PublicService
         interfaces = (graphene.relay.Node,)
-        import graphene
-        import graphene_django_optimizer as gql_optimizer
-        from graphene_django import DjangoObjectType
-
-        from core.schema import OrderedDjangoFilterConnectionField
-        from .models import *
-        from .gql_types import *
-        from .services.public_service_services import PublicServiceServices
-        from .services.form_input_type_services import FormInputTypeServices
-        from .services.form_section_services import FormSectionServices
-        from .services.form_field_services import FormFieldServices
-        from .services.form_field_option_services import FormFieldOptionServices
-        from .services.user_form_submission_services import UserFormSubmissionServices
-        from .services.user_form_data_services import UserFormDataServices
-        from .services.workflow_step_services import WorkflowStepServices
-        from .services.workflow_step_available_field_services import WorkflowStepAvailableFieldServices
-        from .services.workflow_step_approval_services import WorkflowStepApprovalServices
-
-
-        class PublicServiceGQLType(DjangoObjectType):
-            class Meta:
-                model = PublicService
-                interfaces = (graphene.relay.Node,)
-                filter_fields = {
-                    "id": ["exact"],
-                    "title": ["exact", "icontains"],
-                    "description": ["exact", "icontains"],
-                    "is_active": ["exact"],
-                }
+        filter_fields = {
+            "id": ["exact"],
+            "title": ["exact", "icontains"],
+            "description": ["exact", "icontains"],
+            "is_active": ["exact"],
+        }
 
 
 class FormInputTypeGQLType(DjangoObjectType):
@@ -105,3 +82,9 @@ class WorkflowStepApprovalGQLType(DjangoObjectType):
         model = WorkflowStepApproval
         interfaces = (graphene.relay.Node,)
         filter_fields = {"id": ["exact"], "is_approved": ["exact"]}
+
+class SystemUserGQLType(DjangoObjectType):
+    class Meta:
+        model = InteractiveUser
+        interfaces = (graphene.relay.Node,)
+        filter_fields = {"id": ["exact"], "login_name": ["exact", "icontains"]}

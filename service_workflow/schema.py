@@ -20,6 +20,7 @@ from .gql_mutations import *
 from .gql_queries import *
 from .models import *
 from .services.public_service_services import PublicServiceServices
+from .services.system_users_services import SystemUsersServices
 from django.db.models.expressions import RawSQL
 
 
@@ -39,6 +40,8 @@ class Query(graphene.ObjectType):
                                                                        client_mutation_id=graphene.String())
     workflow_step_approval = OrderedDjangoFilterConnectionField(WorkflowStepApprovalGQLType,
                                                                 client_mutation_id=graphene.String())
+    system_users= graphene.List(SystemUserGQLType,
+                                client_mutation_id=graphene.String())
 
     def resolve_public_service(self, info, **kwargs):
         service = PublicServiceServices(info.context.user)
@@ -87,6 +90,11 @@ class Query(graphene.ObjectType):
 
     def resolve_workflow_step_approval(self, info, **kwargs):
         service = WorkflowStepApprovalServices(info.context.user)
+        query = service.get(**kwargs)
+        return gql_optimizer.query(query, info)
+
+    def resolve_system_users(self, info, **kwargs):
+        service = SystemUsersServices(info.context.user)
         query = service.get(**kwargs)
         return gql_optimizer.query(query, info)
 

@@ -109,29 +109,6 @@ class FormFieldOption(HistoryModel):
         db_table = 'sw_form_field_options'
 
 
-#This model is for keeping values for select, select2, radio, checkbox, multiselect
-class FormFieldOption(HistoryModel):
-    public_service = models.ForeignKey(
-        "PublicService",
-        models.DO_NOTHING,
-        blank=True,
-        null=True,
-        related_name="form_field_option_public_service",
-    )
-    form_field= models.ForeignKey(
-        "FormField",
-        models.DO_NOTHING,
-        blank=True,
-        null=True,
-        related_name="form_field_option_form_field"
-    )
-    option_value = models.TextField(blank=False,null=True)
-    option_text = models.TextField(blank=False,null=True)
-    is_preselected = models.BooleanField(blank=False,null=True)
-    class Meta:
-        managed = True
-        db_table = 'sw_form_field_options'
-
 
 class UserFormSubmission(HistoryModel):
     public_service = models.ForeignKey(
