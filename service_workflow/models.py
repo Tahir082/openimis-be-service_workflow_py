@@ -26,7 +26,7 @@ class PublicService(HistoryModel):
 class FormInputType(HistoryModel):
     type = models.CharField(
         max_length=50,
-        blank=False,
+        blank=True,
         null=False)
 
     class Meta:
@@ -41,8 +41,8 @@ class FormSection(HistoryModel):
         null=True,
         related_name="form_section_public_service",
     )
-    title = models.TextField(blank=False,null=True)
-    description = models.TextField(blank=False,null=True)
+    title = models.TextField(blank=True,null=True)
+    description = models.TextField(blank=True,null=True)
     step_no = models.IntegerField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     class Meta:
@@ -71,16 +71,16 @@ class FormField(HistoryModel):
         null=True,
         related_name="form_field_form_input_type"
     )
-    label = models.TextField(blank=False,null=True)
-    placeholder = models.TextField(blank=False,null=True)
-    default_value = models.TextField(blank=False,null=True)
-    is_required = models.BooleanField(blank=False,null=True)
-    min_value = models.TextField(blank=False,null=True)
-    max_value = models.TextField(blank=False,null=True)
-    value_step = models.FloatField(blank=False,null=True)
-    position = models.IntegerField(blank=False,null=True,default=0)
-    is_multiselect = models.BooleanField(blank=False,null=True)
-    help_text = models.TextField(blank=False,null=True)
+    label = models.TextField(blank=True,null=True)
+    placeholder = models.TextField(blank=True,null=True)
+    default_value = models.TextField(blank=True,null=True)
+    is_required = models.BooleanField(blank=True,null=True)
+    min_value = models.TextField(blank=True,null=True)
+    max_value = models.TextField(blank=True,null=True)
+    value_step = models.FloatField(blank=True,null=True)
+    position = models.IntegerField(blank=True,null=True,default=0)
+    is_multiselect = models.BooleanField(blank=True,null=True)
+    help_text = models.TextField(blank=True,null=True)
     class Meta:
         managed = True
         db_table = 'sw_form_fields'
@@ -101,9 +101,9 @@ class FormFieldOption(HistoryModel):
         null=True,
         related_name="form_field_option_form_field"
     )
-    option_value = models.TextField(blank=False,null=True)
-    option_text = models.TextField(blank=False,null=True)
-    is_preselected = models.BooleanField(blank=False,null=True)
+    option_value = models.TextField(blank=True,null=True)
+    option_text = models.TextField(blank=True,null=True)
+    is_preselected = models.BooleanField(blank=True,null=True)
     class Meta:
         managed = True
         db_table = 'sw_form_field_options'
@@ -118,7 +118,7 @@ class UserFormSubmission(HistoryModel):
         null=True,
         related_name="user_form_submission_public_service",
     )
-    submission_date = models.DateField(blank=False,null=True)
+    submission_date = models.DateField(blank=True,null=True)
     interactive_user= models.ForeignKey(
         InteractiveUser,
         models.DO_NOTHING,
@@ -167,9 +167,9 @@ class UserFormData(HistoryModel):
         null=True,
         related_name="user_form_data_form_field_option"
     )
-    value = models.TextField(blank=False,null=True)
-    file_url= models.TextField(blank=False,null=True)
-    file_path= models.TextField(blank=False,null=True)
+    value = models.TextField(blank=True,null=True)
+    file_url= models.TextField(blank=True,null=True)
+    file_path= models.TextField(blank=True,null=True)
     interactive_user= models.ForeignKey(
         InteractiveUser,
         models.DO_NOTHING,
@@ -197,10 +197,10 @@ class WorkflowStep(HistoryModel):
         null=True,
         related_name="workflow_step_interactive_user",
     )
-    step_no = models.IntegerField(blank=False,null=True)
-    workflow_role = models.TextField(blank=False,null=True)
-    responsibility = models.TextField(blank=False,null=True)
-    is_active = models.BooleanField(blank=False,null=True)
+    step_no = models.IntegerField(blank=True,null=True)
+    workflow_role = models.TextField(blank=True,null=True)
+    responsibility = models.TextField(blank=True,null=True)
+    is_active = models.BooleanField(blank=True,null=True)
     class Meta:
         managed = True
         db_table = 'sw_workflow_steps'
@@ -220,7 +220,7 @@ class WorkflowStepAvailableField(HistoryModel):
         null=True,
         related_name="workflow_step_available_field_form_field",
     )
-    is_active = models.BooleanField(blank=False,null=True)
+    is_active = models.BooleanField(blank=True,null=True)
     class Meta:
         managed = True
         db_table = 'sw_workflow_step_available_fields'
@@ -241,7 +241,7 @@ class WorkflowStepApproval(HistoryModel):
         null=True,
         related_name="workflow_step_approval_workflow_step",
     )
-    remarks = models.TextField(blank=False,null=True)
+    remarks = models.TextField(blank=True,null=True)
     from_user = models.ForeignKey(
         InteractiveUser,
         models.DO_NOTHING,
@@ -256,8 +256,8 @@ class WorkflowStepApproval(HistoryModel):
         null=True,
         related_name="workflow_step_approval_to_user",
     )
-    is_approved= models.BooleanField(blank=False,null=True)
-    is_reverted= models.BooleanField(blank=False,null=True)
+    is_approved= models.BooleanField(blank=True,null=True)
+    is_reverted= models.BooleanField(blank=True,null=True)
 
 
     class Meta:

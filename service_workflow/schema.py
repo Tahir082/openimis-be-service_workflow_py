@@ -41,6 +41,8 @@ class Query(graphene.ObjectType):
     workflow_step_approval = OrderedDjangoFilterConnectionField(WorkflowStepApprovalGQLType,
                                                                 client_mutation_id=graphene.String())
     system_users= graphene.List(SystemUserGQLType,
+                                id= graphene.Int(),
+                                login_name= graphene.String(),
                                 client_mutation_id=graphene.String())
 
     def resolve_public_service(self, info, **kwargs):

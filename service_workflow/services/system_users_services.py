@@ -19,6 +19,10 @@ class SystemUsersServices(BaseService):
         if client_mutation_id:
             filters.append(Q(json_ext__contains={"client_mutation_id": client_mutation_id}))
         query = model.objects.filter(*filters).all()
+        if "id" in kwargs:
+            query = query.filter(id=kwargs["id"])
+        if "login_name" in kwargs:
+            query = query.filter(login_name=kwargs["login_name"])
         return query
 
     def create(self, obj_data):
