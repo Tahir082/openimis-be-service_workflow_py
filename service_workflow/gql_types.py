@@ -83,6 +83,7 @@ class WorkflowStepAvailableFieldInputType(OpenIMISMutation.Input):
     id = graphene.String(required=False)
     public_service_id = graphene.String(required=False)
     form_field_id = graphene.String(required=False)
+    workflow_step_id = graphene.String(required=False)
     is_active = graphene.Boolean(required=False)
 
 

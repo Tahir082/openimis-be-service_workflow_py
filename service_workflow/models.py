@@ -220,6 +220,13 @@ class WorkflowStepAvailableField(HistoryModel):
         null=True,
         related_name="workflow_step_available_field_form_field",
     )
+    workflow_step= models.ForeignKey(
+        "WorkflowStep",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="workflow_step_available_field_workflow_step",
+    )
     is_active = models.BooleanField(blank=True,null=True)
     class Meta:
         managed = True
