@@ -11,6 +11,14 @@ import secrets
 import uuid
 from datetime import datetime as py_datetime
 
+class VisitorUser(HistoryModel):
+    name = models.TextField(blank=True,null=True)
+    email = models.TextField(blank=True,null=True)
+    otp = models.TextField(blank=True,null=True)
+    class Meta:
+        managed = True
+        db_table = 'sw_visitor_users'
+
 class PublicService(HistoryModel):
     title = models.TextField(
         blank=True,
@@ -119,12 +127,12 @@ class UserFormSubmission(HistoryModel):
         related_name="user_form_submission_public_service",
     )
     submission_date = models.DateField(blank=True,null=True)
-    interactive_user= models.ForeignKey(
-        InteractiveUser,
+    visitor_user= models.ForeignKey(
+        "VisitorUser",
         models.DO_NOTHING,
         blank=True,
         null=True,
-        related_name="user_form_submission_interactive_user",
+        related_name="user_form_submission_visitor_user"
     )
     class Meta:
         managed = True
@@ -170,12 +178,12 @@ class UserFormData(HistoryModel):
     value = models.TextField(blank=True,null=True)
     file_url= models.TextField(blank=True,null=True)
     file_path= models.TextField(blank=True,null=True)
-    interactive_user= models.ForeignKey(
-        InteractiveUser,
+    visitor_user = models.ForeignKey(
+        "VisitorUser",
         models.DO_NOTHING,
         blank=True,
         null=True,
-        related_name="user_form_data_interactive_user",
+        related_name="user_form_data_visitor_user"
     )
     class Meta:
         managed = True
@@ -270,4 +278,6 @@ class WorkflowStepApproval(HistoryModel):
     class Meta:
         managed = True
         db_table = 'sw_workflow_step_approvals'
+
+
 

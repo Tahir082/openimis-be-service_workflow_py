@@ -18,6 +18,7 @@ from .services.form_field_services import FormFieldServices
 from .services.form_field_option_services import FormFieldOptionServices
 from .services.user_form_submission_services import UserFormSubmissionServices
 from .services.user_form_data_services import UserFormDataServices
+from .services.visitor_user_services import VisitorUserServices
 from .services.workflow_step_services import WorkflowStepServices
 from .services.workflow_step_available_field_services import WorkflowStepAvailableFieldServices
 from .services.workflow_step_approval_services import WorkflowStepApprovalServices
@@ -82,6 +83,64 @@ def no_auth_validation(failure_message, call_type, service_instance, data):
             'detail': str(exc)
         }]
 
+
+class CreateVisitorUserMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        name = graphene.String()
+        email = graphene.String()
+        otp = graphene.String()
+
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @classmethod
+    def mutate(cls, root, info, **data):
+        from .models import VisitorUser
+        try:
+            VisitorUser.objects.create(**data)
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
+
+class UpdateVisitorUserMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        name = graphene.String()
+        email = graphene.String()
+        otp = graphene.String()
+
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @classmethod
+    def mutate(cls, root, info, **data):
+        from .models import VisitorUser
+        try:
+            VisitorUser.objects.update(**data)
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
+
+class DeleteVisitorUserMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        name = graphene.String()
+        email = graphene.String()
+        otp = graphene.String()
+
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @classmethod
+    def mutate(cls, root, info, **data):
+        from .models import VisitorUser
+        try:
+            visitor_user= VisitorUser.objects.get(id=data["id"])
+            visitor_user.delete()
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
 
 class CreatePublicServiceMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
     _mutation_module = mutation_module
@@ -398,131 +457,141 @@ class DeleteFormFieldOptionMutation(BaseHistoryModelCreateMutationMixin, BaseMut
         return result
 
 
-class CreateUserFormSubmissionMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
-    _mutation_module = mutation_module
-    _mutation_class = "CreateUserFormSubmissionMutation"
+class CreateUserFormSubmissionMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        public_service_id = graphene.String()
+        submission_date = graphene.Date()
+        interactive_user_id = graphene.String()
 
-    class Input(UserFormSubmissionInputType):
-        pass
-
-    @classmethod
-    def _mutate(cls, user, **data):
-        failure_message = "service_workflow.mutation.failed_to_create_user_form_submission"
-        service_instance = UserFormSubmissionServices(user)
-        result = auth_permission_validation(
-            failure_message=failure_message,
-            call_type='create',
-            service_instance=service_instance,
-            user=user,
-            data=data,
-        )
-        return result
-
-
-class UpdateUserFormSubmissionMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
-    _mutation_module = mutation_module
-    _mutation_class = "UpdateUserFormSubmissionMutation"
-
-    class Input(UserFormSubmissionInputType):
-        pass
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
 
     @classmethod
-    def _mutate(cls, user, **data):
-        failure_message = "service_workflow.mutation.failed_to_update_user_form_submission"
-        service_instance = UserFormSubmissionServices(user)
-        result = auth_permission_validation(
-            failure_message=failure_message,
-            call_type='update',
-            service_instance=service_instance,
-            user=user,
-            data=data,
-        )
-        return result
+    def mutate(cls, root, info, **data):
+        from .models import UserFormSubmission
+        try:
+            UserFormSubmission.objects.create(**data)
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
 
 
-class DeleteUserFormSubmissionMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
-    _mutation_module = mutation_module
-    _mutation_class = "DeleteUserFormSubmissionMutation"
+class UpdateUserFormSubmissionMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        public_service_id = graphene.String()
+        submission_date = graphene.Date()
+        interactive_user_id = graphene.String()
 
-    class Input(UserFormSubmissionInputType):
-        pass
-
-    @classmethod
-    def _mutate(cls, user, **data):
-        failure_message = "service_workflow.mutation.failed_to_delete_user_form_submission"
-        service_instance = UserFormSubmissionServices(user)
-        result = auth_permission_validation(
-            failure_message=failure_message,
-            call_type='delete',
-            service_instance=service_instance,
-            user=user,
-            data=data,
-        )
-        return result
-
-
-class CreateUserFormDataMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
-    _mutation_module = mutation_module
-    _mutation_class = "CreateUserFormDataMutation"
-
-    class Input(UserFormDataInputType):
-        pass
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
 
     @classmethod
-    def _mutate(cls, user, **data):
-        # file upload support: pass file object through to service
-        failure_message = "service_workflow.mutation.failed_to_create_user_form_data"
-        service_instance = UserFormDataServices(user)
-        result = auth_permission_validation(
-            failure_message=failure_message,
-            call_type='create',
-            service_instance=service_instance,
-            user=user,
-            data=data,
-        )
-        return result
+    def mutate(cls, root, info, **data):
+        from .models import UserFormSubmission
+        try:
+            UserFormSubmission.objects.update(**data)
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
 
 
-class UpdateUserFormDataMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
-    _mutation_module = mutation_module
-    _mutation_class = "UpdateUserFormDataMutation"
+class DeleteUserFormSubmissionMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        public_service_id = graphene.String()
+        submission_date = graphene.Date()
+        interactive_user_id = graphene.String()
 
-    class Input(UserFormDataInputType):
-        pass
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
 
     @classmethod
-    def _mutate(cls, user, **data):
-        failure_message = "service_workflow.mutation.failed_to_update_user_form_data"
-        service_instance = UserFormDataServices(user)
-        result = auth_permission_validation(
-            failure_message=failure_message,
-            call_type='update',
-            service_instance=service_instance,
-            user=user,
-            data=data,
-        )
-        return result
+    def mutate(cls, root, info, **data):
+        from .models import UserFormSubmission
+        try:
+            obj = UserFormSubmission.objects.get(id=data["id"])
+            obj.delete()
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
 
 
-class DeleteUserFormDataMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
-    _mutation_module = mutation_module
-    _mutation_class = "DeleteUserFormDataMutation"
+class CreateUserFormDataMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        user_form_submission_id = graphene.String()
+        public_service_id = graphene.String()
+        form_section_id = graphene.String()
+        form_field_id = graphene.String()
+        form_field_option_id = graphene.String()
+        value = graphene.String()
+        file = graphene.String()
+        interactive_user_id = graphene.String()
 
-    class Input(UserFormDataInputType):
-        pass
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
 
     @classmethod
-    def _mutate(cls, user, **data):
-        failure_message = "service_workflow.mutation.failed_to_delete_user_form_data"
-        service_instance = UserFormDataServices(user)
-        result = auth_permission_validation(
-            failure_message=failure_message,
-            call_type='delete',
-            service_instance=service_instance,
-            user=user,
-            data=data,
-        )
-        return result
+    def mutate(cls, root, info, **data):
+        from .models import UserFormData
+        try:
+            UserFormData.objects.create(**data)
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
+
+
+class UpdateUserFormDataMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        user_form_submission_id = graphene.String()
+        public_service_id = graphene.String()
+        form_section_id = graphene.String()
+        form_field_id = graphene.String()
+        form_field_option_id = graphene.String()
+        value = graphene.String()
+        file = graphene.String()
+        interactive_user_id = graphene.String()
+
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @classmethod
+    def mutate(cls, root, info, **data):
+        from .models import UserFormData
+        try:
+            UserFormData.objects.update(**data)
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
+
+
+class DeleteUserFormDataMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        user_form_submission_id = graphene.String()
+        public_service_id = graphene.String()
+        form_section_id = graphene.String()
+        form_field_id = graphene.String()
+        form_field_option_id = graphene.String()
+        value = graphene.String()
+        file = graphene.String()
+        interactive_user_id = graphene.String()
+
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @classmethod
+    def mutate(cls, root, info, **data):
+        from .models import UserFormData
+        try:
+            obj = UserFormData.objects.get(id=data["id"])
+            obj.delete()
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
 
 
 class CreateWorkflowStepMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):

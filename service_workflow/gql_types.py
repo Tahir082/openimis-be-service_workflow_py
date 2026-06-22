@@ -3,6 +3,13 @@ import graphene
 from core.schema import OpenIMISMutation
 
 
+class VisitorUserInputType(OpenIMISMutation.Input):
+    id = graphene.String(required=False)
+    name = graphene.String(required=False)
+    email = graphene.String(required=False)
+    otp = graphene.String(required=False)
+
+
 class PublicServiceInputType(OpenIMISMutation.Input):
     id = graphene.String(required=False)
     title = graphene.String(required=False)

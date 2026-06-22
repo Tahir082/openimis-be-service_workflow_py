@@ -1,5 +1,6 @@
 import os
 from collections import defaultdict
+from os import name
 
 import graphene
 import graphene_django_optimizer as gql_optimizer
@@ -23,8 +24,17 @@ from .services.public_service_services import PublicServiceServices
 from .services.system_users_services import SystemUsersServices
 from django.db.models.expressions import RawSQL
 
+from .services.visitor_user_services import VisitorUserServices
+
 
 class Query(graphene.ObjectType):
+    visitor_user = graphene.List(
+        VisitorUserGQLType,
+        id= graphene.String(),
+        name= graphene.String(),
+        email= graphene.String(),
+        otp= graphene.String()
+    )
     public_service = OrderedDjangoFilterConnectionField(
         PublicServiceGQLType, client_mutation_id=graphene.String(), orderBy=graphene.List(of_type=graphene.String)
     )
@@ -44,6 +54,18 @@ class Query(graphene.ObjectType):
                                 id= graphene.Int(),
                                 login_name= graphene.String(),
                                 client_mutation_id=graphene.String())
+
+    def resolve_visitor_user(self, info, id=None, name=None, email=None, otp=None):
+        qs= VisitorUser.objects.all()
+        if id:
+            qs= qs.filter(id=id)
+        if name:
+            qs.filter(name=name)
+        if email:
+            qs.filter(email=email)
+        if otp:
+            qs.filter(otp=otp)
+        return qs
 
     def resolve_public_service(self, info, **kwargs):
         service = PublicServiceServices(info.context.user)
@@ -102,6 +124,10 @@ class Query(graphene.ObjectType):
 
 
 class Mutation(graphene.ObjectType):
+    create_visitor_user = CreateVisitorUserMutation.Field()
+    update_visitor_user = UpdateVisitorUserMutation.Field()
+    delete_visitor_user = DeleteVisitorUserMutation.Field()
+
     create_public_service = CreatePublicServiceMutation.Field()
     update_public_service = UpdatePublicServiceMutation.Field()
     delete_public_service = DeletePublicServiceMutation.Field()

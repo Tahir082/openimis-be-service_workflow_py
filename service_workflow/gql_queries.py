@@ -9,6 +9,17 @@ from core import prefix_filterset, ExtendedConnection
 from location.schema import LocationGQLType
 
 
+class VisitorUserGQLType(DjangoObjectType):
+    class Meta:
+        model = VisitorUser
+        interfaces = (graphene.relay.Node,)
+        filter_fields = {
+            "id": ["exact"],
+            "name": ["exact", "icontains"],
+            "email": ["exact", "icontains"],
+            "otp": ["exact"],
+        }
+
 class PublicServiceGQLType(DjangoObjectType):
     class Meta:
         model = PublicService
@@ -89,7 +100,7 @@ class UserFormSubmissionGQLType(DjangoObjectType):
             "id": ["exact"],
             "public_service": ["exact"],
             "submission_date": ["exact", "gt", "lt", "gte", "lte"],
-            "interactive_user": ["exact"]
+            "visitor_user": ["exact"]
         }
 
 
@@ -107,7 +118,7 @@ class UserFormDataGQLType(DjangoObjectType):
             "value": ["exact", "icontains"],
             "file_url": ["exact", "icontains"],
             "file_path": ["exact", "icontains"],
-            "interactive_user": ["exact"]
+            "visitor_user": ["exact"]
         }
 
 
