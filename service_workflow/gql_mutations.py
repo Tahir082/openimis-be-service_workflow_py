@@ -482,7 +482,7 @@ class UpdateUserFormSubmissionMutation(graphene.Mutation):
         id = graphene.String()
         public_service_id = graphene.String()
         submission_date = graphene.Date()
-        interactive_user_id = graphene.String()
+        visitor_user_id = graphene.String()
 
     success = graphene.Boolean()
     errors = graphene.List(graphene.String)
@@ -502,7 +502,7 @@ class DeleteUserFormSubmissionMutation(graphene.Mutation):
         id = graphene.String()
         public_service_id = graphene.String()
         submission_date = graphene.Date()
-        interactive_user_id = graphene.String()
+        visitor_user_id = graphene.String()
 
     success = graphene.Boolean()
     errors = graphene.List(graphene.String)
@@ -528,7 +528,7 @@ class CreateUserFormDataMutation(graphene.Mutation):
         form_field_option_id = graphene.String()
         value = graphene.String()
         file = graphene.String()
-        interactive_user_id = graphene.String()
+        visitor_user_id = graphene.String()
 
     success = graphene.Boolean()
     errors = graphene.List(graphene.String)
@@ -553,7 +553,7 @@ class UpdateUserFormDataMutation(graphene.Mutation):
         form_field_option_id = graphene.String()
         value = graphene.String()
         file = graphene.String()
-        interactive_user_id = graphene.String()
+        visitor_user_id = graphene.String()
 
     success = graphene.Boolean()
     errors = graphene.List(graphene.String)
@@ -578,7 +578,7 @@ class DeleteUserFormDataMutation(graphene.Mutation):
         form_field_option_id = graphene.String()
         value = graphene.String()
         file = graphene.String()
-        interactive_user_id = graphene.String()
+        visitor_user_id = graphene.String()
 
     success = graphene.Boolean()
     errors = graphene.List(graphene.String)
