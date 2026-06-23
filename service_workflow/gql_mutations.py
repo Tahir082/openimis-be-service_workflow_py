@@ -462,7 +462,7 @@ class CreateUserFormSubmissionMutation(graphene.Mutation):
         id = graphene.String()
         public_service_id = graphene.String()
         submission_date = graphene.Date()
-        interactive_user_id = graphene.String()
+        visitor_user_id = graphene.String()
 
     success = graphene.Boolean()
     errors = graphene.List(graphene.String)

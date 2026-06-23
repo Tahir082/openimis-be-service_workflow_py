@@ -35,6 +35,62 @@ class Query(graphene.ObjectType):
         email= graphene.String(),
         otp= graphene.String()
     )
+    public_public_service = graphene.List(
+        PublicServiceGQLType,
+        id= graphene.String(),
+        title= graphene.String(),
+        description= graphene.String(),
+        is_active= graphene.Boolean()
+    )
+    public_form_input_type = graphene.List(
+        FormInputTypeGQLType,
+        id= graphene.String(),
+        type_name= graphene.String()
+    )
+    public_form_section = graphene.List(
+        FormSectionGQLType,
+        id= graphene.String(),
+        public_service_id= graphene.String(),
+        title= graphene.String(),
+        description= graphene.String(),
+        step_no= graphene.Int(),
+        is_active= graphene.Boolean()
+    )
+    public_form_field = graphene.List(
+        FormFieldGQLType,
+        id= graphene.String(),
+        public_service_id= graphene.String(),
+        form_section_id= graphene.String(),
+        form_input_type_id= graphene.String(),
+        label= graphene.String(),
+        is_required= graphene.Boolean(),
+        is_multiselect= graphene.Boolean()
+    )
+    public_form_field_option = graphene.List(
+        FormFieldOptionGQLType,
+        id= graphene.String(),
+        public_service_id= graphene.String(),
+        form_field_id= graphene.String(),
+        option_value= graphene.String(),
+        option_text= graphene.String(),
+        is_preselected= graphene.Boolean()
+    )
+    public_user_form_submission = graphene.List(
+        UserFormSubmissionGQLType,
+        id= graphene.String(),
+        public_service_id= graphene.String(),
+        visitor_user_id= graphene.String()
+    )
+    public_user_form_data = graphene.List(
+        UserFormDataGQLType,
+        id= graphene.String(),
+        user_form_submission_id= graphene.String(),
+        public_service_id= graphene.String(),
+        form_section_id= graphene.String(),
+        form_field_id= graphene.String(),
+        form_field_option_id= graphene.String(),
+        visitor_user_id= graphene.String()
+    )
     public_service = OrderedDjangoFilterConnectionField(
         PublicServiceGQLType, client_mutation_id=graphene.String(), orderBy=graphene.List(of_type=graphene.String)
     )
@@ -56,7 +112,7 @@ class Query(graphene.ObjectType):
                                 client_mutation_id=graphene.String())
 
     def resolve_visitor_user(self, info, id=None, name=None, email=None, otp=None):
-        qs= VisitorUser.objects.all()
+        qs= VisitorUser.objects.filter(is_deleted=False)
         if id:
             qs= qs.filter(id=id)
         if name:
@@ -65,6 +121,104 @@ class Query(graphene.ObjectType):
             qs.filter(email=email)
         if otp:
             qs.filter(otp=otp)
+        return qs
+
+    def resolve_public_public_service(self, info, id=None, title=None, description=None, is_active=None):
+        qs = PublicService.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if title:
+            qs = qs.filter(title__icontains=title)
+        if description:
+            qs = qs.filter(description__icontains=description)
+        if is_active is not None:
+            qs = qs.filter(is_active=is_active)
+        return qs
+
+    def resolve_public_form_input_type(self, info, id=None, type_name=None):
+        qs = FormInputType.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if type_name:
+            qs = qs.filter(type__icontains=type_name)
+        return qs
+
+    def resolve_public_form_section(self, info, id=None, public_service_id=None, title=None, description=None, step_no=None, is_active=None):
+        qs = FormSection.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if public_service_id:
+            qs = qs.filter(public_service_id=public_service_id)
+        if title:
+            qs = qs.filter(title__icontains=title)
+        if description:
+            qs = qs.filter(description__icontains=description)
+        if step_no is not None:
+            qs = qs.filter(step_no=step_no)
+        if is_active is not None:
+            qs = qs.filter(is_active=is_active)
+        return qs
+
+    def resolve_public_form_field(self, info, id=None, public_service_id=None, form_section_id=None, form_input_type_id=None, label=None, is_required=None, is_multiselect=None):
+        qs = FormField.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if public_service_id:
+            qs = qs.filter(public_service_id=public_service_id)
+        if form_section_id:
+            qs = qs.filter(form_section_id=form_section_id)
+        if form_input_type_id:
+            qs = qs.filter(form_input_type_id=form_input_type_id)
+        if label:
+            qs = qs.filter(label__icontains=label)
+        if is_required is not None:
+            qs = qs.filter(is_required=is_required)
+        if is_multiselect is not None:
+            qs = qs.filter(is_multiselect=is_multiselect)
+        return qs
+
+    def resolve_public_form_field_option(self, info, id=None, public_service_id=None, form_field_id=None, option_value=None, option_text=None, is_preselected=None):
+        qs = FormFieldOption.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if public_service_id:
+            qs = qs.filter(public_service_id=public_service_id)
+        if form_field_id:
+            qs = qs.filter(form_field_id=form_field_id)
+        if option_value:
+            qs = qs.filter(option_value__icontains=option_value)
+        if option_text:
+            qs = qs.filter(option_text__icontains=option_text)
+        if is_preselected is not None:
+            qs = qs.filter(is_preselected=is_preselected)
+        return qs
+
+    def resolve_public_user_form_submission(self, info, id=None, public_service_id=None, visitor_user_id=None):
+        qs = UserFormSubmission.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if public_service_id:
+            qs = qs.filter(public_service_id=public_service_id)
+        if visitor_user_id:
+            qs = qs.filter(visitor_user_id=visitor_user_id)
+        return qs
+
+    def resolve_public_user_form_data(self, info, id=None, user_form_submission_id=None, public_service_id=None, form_section_id=None, form_field_id=None, form_field_option_id=None, visitor_user_id=None):
+        qs = UserFormData.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if user_form_submission_id:
+            qs = qs.filter(user_form_submission_id=user_form_submission_id)
+        if public_service_id:
+            qs = qs.filter(public_service_id=public_service_id)
+        if form_section_id:
+            qs = qs.filter(form_section_id=form_section_id)
+        if form_field_id:
+            qs = qs.filter(form_field_id=form_field_id)
+        if form_field_option_id:
+            qs = qs.filter(form_field_option_id=form_field_option_id)
+        if visitor_user_id:
+            qs = qs.filter(visitor_user_id=visitor_user_id)
         return qs
 
     def resolve_public_service(self, info, **kwargs):
