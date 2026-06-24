@@ -162,7 +162,9 @@ class WorkflowStepApprovalGQLType(DjangoObjectType):
             "from_user": ["exact"],
             "to_user": ["exact"],
             "is_approved": ["exact"],
-            "is_reverted": ["exact"]
+            "is_reverted": ["exact"],
+            "final_approved": ["exact"],
+            "is_sent": ["exact"]
         }
 
 

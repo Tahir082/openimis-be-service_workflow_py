@@ -24,7 +24,7 @@ class PublicService(HistoryModel):
         blank=True,
         null=True)
     description = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -273,6 +273,8 @@ class WorkflowStepApproval(HistoryModel):
     )
     is_approved= models.BooleanField(blank=True,null=True)
     is_reverted= models.BooleanField(blank=True,null=True)
+    final_approved= models.BooleanField(blank=True,null=True)
+    is_sent= models.BooleanField(blank=True,null=True)
 
 
     class Meta:

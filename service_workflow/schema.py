@@ -91,6 +91,29 @@ class Query(graphene.ObjectType):
         form_field_option_id= graphene.String(),
         visitor_user_id= graphene.String()
     )
+    public_workflow_step = graphene.List(
+        WorkflowStepGQLType,
+        id= graphene.String(),
+        public_service_id= graphene.String(),
+        interactive_user_id= graphene.String(),
+        step_no= graphene.Int(),
+        workflow_role= graphene.String(),
+        responsibility= graphene.String(),
+        is_active= graphene.Boolean()
+    )
+    public_workflow_step_approval = graphene.List(
+        WorkflowStepApprovalGQLType,
+        id= graphene.String(),
+        user_form_submission_id= graphene.String(),
+        workflow_step_id= graphene.String(),
+        remarks= graphene.String(),
+        from_user_id= graphene.String(),
+        to_user_id= graphene.String(),
+        is_approved= graphene.Boolean(),
+        is_reverted= graphene.Boolean(),
+        final_approved= graphene.Boolean(),
+        is_sent= graphene.Boolean()
+    )
     public_service = OrderedDjangoFilterConnectionField(
         PublicServiceGQLType, client_mutation_id=graphene.String(), orderBy=graphene.List(of_type=graphene.String)
     )
@@ -221,6 +244,48 @@ class Query(graphene.ObjectType):
             qs = qs.filter(visitor_user_id=visitor_user_id)
         return qs
 
+    def resolve_public_workflow_step(self, info, id=None, public_service_id=None, interactive_user_id=None, step_no=None, workflow_role=None, responsibility=None, is_active=None):
+        qs = WorkflowStep.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if public_service_id:
+            qs = qs.filter(public_service_id=public_service_id)
+        if interactive_user_id:
+            qs = qs.filter(interactive_user_id=interactive_user_id)
+        if step_no is not None:
+            qs = qs.filter(step_no=step_no)
+        if workflow_role:
+            qs = qs.filter(workflow_role__icontains=workflow_role)
+        if responsibility:
+            qs = qs.filter(responsibility__icontains=responsibility)
+        if is_active is not None:
+            qs = qs.filter(is_active=is_active)
+        return qs
+
+    def resolve_public_workflow_step_approval(self, info, id=None, user_form_submission_id=None, workflow_step_id=None, remarks=None, from_user_id=None, to_user_id=None, is_approved=None, is_reverted=None, final_approved=None, is_sent=None):
+        qs = WorkflowStepApproval.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if user_form_submission_id:
+            qs = qs.filter(user_form_submission_id=user_form_submission_id)
+        if workflow_step_id:
+            qs = qs.filter(workflow_step_id=workflow_step_id)
+        if remarks:
+            qs = qs.filter(remarks__icontains=remarks)
+        if from_user_id:
+            qs = qs.filter(from_user_id=from_user_id)
+        if to_user_id:
+            qs = qs.filter(to_user_id=to_user_id)
+        if is_approved is not None:
+            qs = qs.filter(is_approved=is_approved)
+        if is_reverted is not None:
+            qs = qs.filter(is_reverted=is_reverted)
+        if final_approved is not None:
+            qs = qs.filter(is_reverted=final_approved)
+        if is_sent is not None:
+            qs = qs.filter(is_reverted=is_sent)
+        return qs
+
     def resolve_public_service(self, info, **kwargs):
         service = PublicServiceServices(info.context.user)
         query = service.get(**kwargs)
@@ -318,6 +383,7 @@ class Mutation(graphene.ObjectType):
     update_workflow_step_available_field = UpdateWorkflowStepAvailableFieldMutation.Field()
     delete_workflow_step_available_field = DeleteWorkflowStepAvailableFieldMutation.Field()
 
+    create_workflow_step_approval_public = CreateWorkflowStepApprovalPublicMutation.Field()
     create_workflow_step_approval = CreateWorkflowStepApprovalMutation.Field()
     update_workflow_step_approval = UpdateWorkflowStepApprovalMutation.Field()
     delete_workflow_step_approval = DeleteWorkflowStepApprovalMutation.Field()

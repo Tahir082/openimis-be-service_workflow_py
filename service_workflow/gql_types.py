@@ -103,3 +103,5 @@ class WorkflowStepApprovalInputType(OpenIMISMutation.Input):
     to_user_id = graphene.String(required=False)
     is_approved = graphene.Boolean(required=False)
     is_reverted = graphene.Boolean(required=False)
+    final_approved = graphene.Boolean(required=False)
+    is_sent= graphene.Boolean(required=False)

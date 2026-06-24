@@ -117,7 +117,12 @@ class UpdateVisitorUserMutation(graphene.Mutation):
     def mutate(cls, root, info, **data):
         from .models import VisitorUser
         try:
-            VisitorUser.objects.update(**data)
+            # VisitorUser.objects.update(**data)
+            obj= VisitorUser.objects.get(id=data["id"])
+            obj.name = data["name"]
+            obj.email = data["email"]
+            obj.otp= data["otp"]
+            obj.save();
             return cls(success=True, errors=[])
         except Exception as e:
             return cls(success=False, errors=[str(e)])
@@ -739,6 +744,30 @@ class CreateWorkflowStepApprovalMutation(BaseHistoryModelCreateMutationMixin, Ba
             data=data,
         )
         return result
+    
+class CreateWorkflowStepApprovalPublicMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+        user_form_submission_id = graphene.String()
+        workflow_step_id = graphene.String()
+        remarks = graphene.String()
+        from_user_id = graphene.String()
+        to_user_id = graphene.String()
+        is_approved = graphene.Boolean()
+        is_reverted = graphene.Boolean()
+        final_approved = graphene.Boolean()
+
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @classmethod
+    def mutate(cls, root, info, **data):
+        from .models import WorkflowStepApproval
+        try:
+            WorkflowStepApproval.objects.create(**data)
+            return cls(success=True, errors=[])
+        except Exception as e:
+            return cls(success=False, errors=[str(e)])
 
 
 class UpdateWorkflowStepApprovalMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
