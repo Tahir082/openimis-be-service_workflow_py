@@ -72,7 +72,8 @@ class UserFormDataInputType(OpenIMISMutation.Input):
     form_field_id = graphene.String(required=False)
     form_field_option_id = graphene.String(required=False)
     value = graphene.String(required=False)
-    file = graphene.String(required=False)
+    file_path = graphene.String(required=False)
+    file_url = graphene.String(required=False)
     interactive_user_id = graphene.String(required=False)
 
 
