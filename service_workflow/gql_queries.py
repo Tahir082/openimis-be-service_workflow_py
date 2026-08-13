@@ -55,6 +55,17 @@ class FormSectionGQLType(DjangoObjectType):
             "is_active": ["exact"]
         }
 
+class FormFieldGroupGQLType(DjangoObjectType):
+    class Meta:
+        model = FormFieldGroup
+        interfaces = (graphene.relay.Node,)
+        filter_fields = {
+            "id": ["exact"],
+            "form_section_id": ["exact"],
+            "title": ["exact", "icontains"],
+            "description": ["exact", "icontains"]
+        }
+
 
 class FormFieldGQLType(DjangoObjectType):
     class Meta:

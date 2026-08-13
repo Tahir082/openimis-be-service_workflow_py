@@ -30,6 +30,12 @@ class FormSectionInputType(OpenIMISMutation.Input):
     step_no = graphene.Int(required=False)
     is_active = graphene.Boolean(required=False)
 
+class FormFieldGroupInputType(OpenIMISMutation.Input):
+    id = graphene.String(required=False)
+    form_section_id = graphene.String(required=False)
+    title = graphene.String(required=False)
+    description = graphene.String(required=False)
+
 
 class FormFieldInputType(OpenIMISMutation.Input):
     id = graphene.String(required=False)

@@ -56,6 +56,14 @@ class Query(graphene.ObjectType):
         step_no= graphene.Int(),
         is_active= graphene.Boolean()
     )
+    public_form_field_group = graphene.List(
+        FormFieldGroupGQLType,
+        id= graphene.String(),
+        public_service_id= graphene.String(),
+        form_section_id= graphene.String(),
+        title= graphene.String(),
+        description= graphene.String(),
+    )
     public_form_field = graphene.List(
         FormFieldGQLType,
         id= graphene.String(),
@@ -119,6 +127,7 @@ class Query(graphene.ObjectType):
     )
     form_input_type = OrderedDjangoFilterConnectionField(FormInputTypeGQLType, client_mutation_id=graphene.String())
     form_section = OrderedDjangoFilterConnectionField(FormSectionGQLType, client_mutation_id=graphene.String())
+    form_field_group = OrderedDjangoFilterConnectionField(FormFieldGroupGQLType, client_mutation_id=graphene.String())
     form_field = OrderedDjangoFilterConnectionField(FormFieldGQLType, client_mutation_id=graphene.String())
     form_field_option = OrderedDjangoFilterConnectionField(FormFieldOptionGQLType, client_mutation_id=graphene.String())
     user_form_submission = OrderedDjangoFilterConnectionField(UserFormSubmissionGQLType,
@@ -180,6 +189,20 @@ class Query(graphene.ObjectType):
             qs = qs.filter(step_no=step_no)
         if is_active is not None:
             qs = qs.filter(is_active=is_active)
+        return qs
+
+    def resolve_public_form_field_group(self, info, id=None, public_service_id=None, form_section_id=None, title=None, description=None):
+        qs = FormFieldGroup.objects.filter(is_deleted=False)
+        if id:
+            qs = qs.filter(id=id)
+        if public_service_id:
+            qs = qs.filter(public_service_id=public_service_id)
+        if form_section_id:
+            qs = qs.filter(form_section_id=form_section_id)
+        if title:
+            qs = qs.filter(title__icontains=title)
+        if description:
+            qs = qs.filter(description__icontains=description)
         return qs
 
     def resolve_public_form_field(self, info, id=None, public_service_id=None, form_section_id=None, form_input_type_id=None, label=None, is_required=None, is_multiselect=None):
@@ -301,6 +324,11 @@ class Query(graphene.ObjectType):
         query = service.get(**kwargs)
         return gql_optimizer.query(query, info)
 
+    def resolve_form_field_group(self, info, **kwargs):
+        service = FormFieldGroupServices(info.context.user)
+        query = service.get(**kwargs)
+        return gql_optimizer.query(query, info)
+
     def resolve_form_field(self, info, **kwargs):
         service = FormFieldServices(info.context.user)
         query = service.get(**kwargs)
@@ -359,6 +387,10 @@ class Mutation(graphene.ObjectType):
     update_form_section = UpdateFormSectionMutation.Field()
     delete_form_section = DeleteFormSectionMutation.Field()
 
+    create_form_field_group = CreateFormFieldGroupMutation.Field()
+    update_form_field_group = UpdateFormFieldGroupMutation.Field()
+    delete_form_field_group = DeleteFormFieldGroupMutation.Field()
+
     create_form_field = CreateFormFieldMutation.Field()
     update_form_field = UpdateFormFieldMutation.Field()
     delete_form_field = DeleteFormFieldMutation.Field()
@@ -387,3 +419,4 @@ class Mutation(graphene.ObjectType):
     create_workflow_step_approval = CreateWorkflowStepApprovalMutation.Field()
     update_workflow_step_approval = UpdateWorkflowStepApprovalMutation.Field()
     delete_workflow_step_approval = DeleteWorkflowStepApprovalMutation.Field()
+

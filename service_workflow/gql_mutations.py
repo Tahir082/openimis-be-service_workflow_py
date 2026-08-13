@@ -11,6 +11,7 @@ from datetime import date, datetime
 import json
 import graphene
 from .gql_types import *
+from .services.form_field_group_services import FormFieldGroupServices
 from .services.public_service_services import PublicServiceServices
 from .services.form_input_type_services import FormInputTypeServices
 from .services.form_section_services import FormSectionServices
@@ -326,6 +327,68 @@ class DeleteFormSectionMutation(BaseHistoryModelCreateMutationMixin, BaseMutatio
     def _mutate(cls, user, **data):
         failure_message = "service_workflow.mutation.failed_to_delete_form_section"
         service_instance = FormSectionServices(user)
+        result = auth_permission_validation(
+            failure_message=failure_message,
+            call_type='delete',
+            service_instance=service_instance,
+            user=user,
+            data=data,
+        )
+        return result
+
+class CreateFormFieldGroupMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
+    _mutation_module = mutation_module
+    _mutation_class = "CreateFormFieldGroupMutation"
+
+    class Input(FormFieldGroupInputType):
+        pass
+
+    @classmethod
+    def _mutate(cls, user, **data):
+        failure_message = "service_workflow.mutation.failed_to_create_form_field_group"
+        service_instance = FormFieldGroupServices(user)
+        result = auth_permission_validation(
+            failure_message=failure_message,
+            call_type='create',
+            service_instance=service_instance,
+            user=user,
+            data=data,
+        )
+        return result
+
+
+class UpdateFormFieldGroupMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
+    _mutation_module = mutation_module
+    _mutation_class = "UpdateFormFieldGroupMutation"
+
+    class Input(FormFieldGroupInputType):
+        pass
+
+    @classmethod
+    def _mutate(cls, user, **data):
+        failure_message = "service_workflow.mutation.failed_to_update_form_field_group"
+        service_instance = FormFieldGroupServices(user)
+        result = auth_permission_validation(
+            failure_message=failure_message,
+            call_type='update',
+            service_instance=service_instance,
+            user=user,
+            data=data,
+        )
+        return result
+
+
+class DeleteFormFieldGroupMutation(BaseHistoryModelCreateMutationMixin, BaseMutation):
+    _mutation_module = mutation_module
+    _mutation_class = "DeleteFormFieldGroupMutation"
+
+    class Input(FormFieldGroupInputType):
+        pass
+
+    @classmethod
+    def _mutate(cls, user, **data):
+        failure_message = "service_workflow.mutation.failed_to_delete_form_field_group"
+        service_instance = FormFieldGroupServices(user)
         result = auth_permission_validation(
             failure_message=failure_message,
             call_type='delete',

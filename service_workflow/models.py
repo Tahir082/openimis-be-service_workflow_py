@@ -57,6 +57,27 @@ class FormSection(HistoryModel):
         managed = True
         db_table = 'sw_form_sections'
 
+class FormFieldGroup(HistoryModel):
+    public_service = models.ForeignKey(
+        "PublicService",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="form_field_group_public_service",
+    )
+    form_section = models.ForeignKey(
+        "FormSection",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="form_field_group_form_section"
+    )
+    title = models.TextField(blank=True,null=True)
+    description = models.TextField(blank=True,null=True)
+    class Meta:
+        managed = True
+        db_table = 'sw_form_field_groups'
+
 class FormField(HistoryModel):
     public_service = models.ForeignKey(
         "PublicService",
@@ -71,6 +92,13 @@ class FormField(HistoryModel):
         blank=True,
         null=True,
         related_name="form_field_form_section"
+    )
+    form_field_group= models.ForeignKey(
+        "FormFieldGroup",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="form_field_group_form_field"
     )
     form_input_type= models.ForeignKey(
         "FormInputType",
@@ -108,6 +136,13 @@ class FormFieldOption(HistoryModel):
         blank=True,
         null=True,
         related_name="form_field_option_form_field"
+    )
+    form_field_group= models.ForeignKey(
+        "FormFieldGroup",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="form_field_option_group_form_field"
     )
     option_value = models.TextField(blank=True,null=True)
     option_text = models.TextField(blank=True,null=True)
@@ -167,6 +202,13 @@ class UserFormData(HistoryModel):
         blank=True,
         null=True,
         related_name="user_form_data_form_field"
+    )
+    form_field_group= models.ForeignKey(
+        "FormFieldGroup",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="user_form_data_form_field_group"
     )
     form_field_option= models.ForeignKey(
         "FormFieldOption",
