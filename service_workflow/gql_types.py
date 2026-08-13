@@ -42,7 +42,7 @@ class FormFieldInputType(OpenIMISMutation.Input):
     is_required = graphene.Boolean(required=False)
     min_value = graphene.String(required=False)
     max_value = graphene.String(required=False)
-    value_step = graphene.Float(required=False)
+    value_step = graphene.String(required=False)
     position = graphene.Int(required=False)
     is_multiselect = graphene.Boolean(required=False)
     help_text = graphene.String(required=False)

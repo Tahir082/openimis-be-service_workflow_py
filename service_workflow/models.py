@@ -85,7 +85,7 @@ class FormField(HistoryModel):
     is_required = models.BooleanField(blank=True,null=True)
     min_value = models.TextField(blank=True,null=True)
     max_value = models.TextField(blank=True,null=True)
-    value_step = models.FloatField(blank=True,null=True)
+    value_step = models.TextField(blank=True,null=True)
     position = models.IntegerField(blank=True,null=True,default=0)
     is_multiselect = models.BooleanField(blank=True,null=True)
     help_text = models.TextField(blank=True,null=True)
