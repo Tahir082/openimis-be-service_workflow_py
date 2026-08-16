@@ -61,7 +61,8 @@ class FormFieldGroupGQLType(DjangoObjectType):
         interfaces = (graphene.relay.Node,)
         filter_fields = {
             "id": ["exact"],
-            "form_section_id": ["exact"],
+            "public_service": ["exact"],
+            "form_section": ["exact"],
             "title": ["exact", "icontains"],
             "description": ["exact", "icontains"]
         }
@@ -75,6 +76,7 @@ class FormFieldGQLType(DjangoObjectType):
             "id": ["exact"],
             "public_service": ["exact"],
             "form_section": ["exact"],
+            "form_field_group": ["exact"],
             "form_input_type": ["exact"],
             "label": ["exact", "icontains"],
             "placeholder": ["exact", "icontains"],
@@ -125,6 +127,7 @@ class UserFormDataGQLType(DjangoObjectType):
             "public_service": ["exact"],
             "form_section": ["exact"],
             "form_field": ["exact"],
+            "form_field_group": ["exact"],
             "form_field_option": ["exact"],
             "value": ["exact", "icontains"],
             "file_url": ["exact", "icontains"],

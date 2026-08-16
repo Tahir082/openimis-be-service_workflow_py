@@ -69,6 +69,7 @@ class Query(graphene.ObjectType):
         id= graphene.String(),
         public_service_id= graphene.String(),
         form_section_id= graphene.String(),
+        form_field_group_id= graphene.String(),
         form_input_type_id= graphene.String(),
         label= graphene.String(),
         is_required= graphene.Boolean(),
@@ -205,7 +206,7 @@ class Query(graphene.ObjectType):
             qs = qs.filter(description__icontains=description)
         return qs
 
-    def resolve_public_form_field(self, info, id=None, public_service_id=None, form_section_id=None, form_input_type_id=None, label=None, is_required=None, is_multiselect=None):
+    def resolve_public_form_field(self, info, id=None, public_service_id=None, form_section_id=None, form_field_group_id=None, form_input_type_id=None, label=None, is_required=None, is_multiselect=None):
         qs = FormField.objects.filter(is_deleted=False)
         if id:
             qs = qs.filter(id=id)
@@ -213,6 +214,8 @@ class Query(graphene.ObjectType):
             qs = qs.filter(public_service_id=public_service_id)
         if form_section_id:
             qs = qs.filter(form_section_id=form_section_id)
+        if form_field_group_id:
+            qs = qs.filter(form_section_id=form_field_group_id)
         if form_input_type_id:
             qs = qs.filter(form_input_type_id=form_input_type_id)
         if label:
@@ -221,6 +224,9 @@ class Query(graphene.ObjectType):
             qs = qs.filter(is_required=is_required)
         if is_multiselect is not None:
             qs = qs.filter(is_multiselect=is_multiselect)
+
+        if qs:
+            qs= qs.order_by("date_created")
         return qs
 
     def resolve_public_form_field_option(self, info, id=None, public_service_id=None, form_field_id=None, option_value=None, option_text=None, is_preselected=None):

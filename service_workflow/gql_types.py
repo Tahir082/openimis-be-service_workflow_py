@@ -32,6 +32,7 @@ class FormSectionInputType(OpenIMISMutation.Input):
 
 class FormFieldGroupInputType(OpenIMISMutation.Input):
     id = graphene.String(required=False)
+    public_service_id = graphene.String(required=False)
     form_section_id = graphene.String(required=False)
     title = graphene.String(required=False)
     description = graphene.String(required=False)
@@ -41,6 +42,7 @@ class FormFieldInputType(OpenIMISMutation.Input):
     id = graphene.String(required=False)
     public_service_id = graphene.String(required=False)
     form_section_id = graphene.String(required=False)
+    form_field_group_id = graphene.String(required=False)
     form_input_type_id = graphene.String(required=False)
     label = graphene.String(required=False)
     placeholder = graphene.String(required=False)
@@ -76,6 +78,7 @@ class UserFormDataInputType(OpenIMISMutation.Input):
     public_service_id = graphene.String(required=False)
     form_section_id = graphene.String(required=False)
     form_field_id = graphene.String(required=False)
+    form_field_group_id = graphene.String(required=False)
     form_field_option_id = graphene.String(required=False)
     value = graphene.String(required=False)
     file_path = graphene.String(required=False)
